@@ -11,10 +11,15 @@ Created on Fri Jul  5 11:03:59 2019
 
 @author: AbhilashSrivastava
 """
-from flask import Flask,render_template,url_for,request,flash,redirect
+from flask import Flask,render_template,url_for,request,flash,redirect,session,logging
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session,sessionmaker
+from passlib.hash import sha256_crypt
 from flask_mysqldb import MySQL
 import yaml
 from forms import RegistrationForm, LoginForm
+import random
+
 
 app=Flask(__name__)
 
@@ -28,8 +33,11 @@ app.config['MYSQL_DB']=db['mysql_db']
 
 app.config['SECRET_KEY']='4dd89dffe2f2954605c7f1d6e2d0f2d4'
 
+engine=create_engine("mysql+pymysql://root:lapulga@10@localhost/flaskapp")
+db=scoped_session(sessionmaker(bind=engine))
 mysql=MySQL(app)
 
+    
 @app.route('/')
 def home():
     return render_template('home.html',title='HomePage')
@@ -37,6 +45,21 @@ def home():
 @app.route('/register',methods=['GET','POST'])
 def registration():
     form=RegistrationForm()
+    if request.method=='POST':
+        name=request.form.get("username")
+        email=request.form.get("email")
+        jId=request.form.get("jobId")
+        password=request.form.get("password")
+        confirm=request.form.get("confirm_password")
+        secure_password=sha256_crypt.encrypt(str(form.password))
+        
+        if password==confirm:
+            db.execute(f"INSERT INTO candid(name,email,jobId,password) VALUES(:name,:email,:jId,:password)",
+                                           {"name":name,"email":email,"jId":jId,"password":secure_password})
+            db.commit()
+            return redirect(url_for('Login'))
+        else:
+            return render_template("register.html")
     if form.validate_on_submit():
         flash(f'Account created for {form.username.data}!','success')
         return redirect(url_for('home'))
@@ -73,7 +96,7 @@ def info():
 
         
 if __name__=='__main__':
-    app.run(debug=True,host='127.0.0.1',port=3000)
+    app.run(debug=True,host='127.0.0.1',port=2000)
     
     
     
