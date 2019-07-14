@@ -1,0 +1,33 @@
+{% extends "layoutadm.html" %}
+{% block content %}
+<table border =1 style="position: relative;left:20%">
+        <tr style="text-align: center">
+                <th>candidId</th>
+                <th>name</th> 
+                <th>JobId</th>
+                <th>Resume</th>
+        </tr>
+    {% for user in userDetails %}
+    <tr>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <td><a href="{{ 'adprof' }}" ><button id="idp" name="idp" value="{{ user[0] }}">{{ user[0] }}</button></a></td>
+        <td>{{ user[1]}}</td>
+        <td>{{ user[3]}}</td>
+        <td><a href="{{ userR }}" target="_blank">Resume</a></td>
+    </tr>
+    {% endfor %}
+    <script type="text/javascript">
+        var data;
+            $("button").click(function() {
+            var fired_button = $(this).val();
+            //alert(fired_button);
+            data=[{"id":fired_button}];
+            doWork();
+            });
+            function doWork(){
+                $.post("receiver",data,function(){});
+            event.preventDefault();
+            }
+    </script>
+</table>
+{% endblock content %}

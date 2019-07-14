@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+            <title>
+                    PERSONAL WEBPAGE
+            </title>
+            <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/port.css')}}">
+            <style>
+                @import url('https://fonts.googleapis.com/css?family=Architects+Daughter|Pacifico|Satisfy&display=swap');
+                body{
+                    background-image: url("{{url_for('static',filename='css/naruto.jpg')}}");
+                    background-size: cover;
+                    background-color: blue;
+                }
+            </style>
+    </head>
+    <body>
+        <div id="upperWall" style="position: absolute;left:0px;top: 0px;"><img src="{{url_for('static',filename='css/musician.jpg')}}" style="position: relative;left:400px;" width="500px" height="200px"/></div>
+        <div class="avatar" style="position: relative;left:20px;top:50px;"></div>
+        <div id="main" style="position: relative;top:5px;"></div>
+        <div style="position: relative;left: 10px;top:50px;" id="socialMedia">
+            <ul id="social">
+                <a href="https://www.facebook.com/abhilash.srivastava.7927?ref=bookmarks" target="_blank" ><img src="{{ url_for('static',filename='css/001-facebook.png')}}" style="position: relative;left:10px;" class="fb"/></a>
+                <a href="https://www.linkedin.com/in/abhilash-srivastava-55829b115/" target="_blank" style="position: relative;left:10px;"><img src="{{ url_for('static',filename='css/003-linkedin.png')}}" style="position: relative;left:15px;" class="lin"/></a>
+                <a href="https://www.instagram.com/abhi_sriv10/" target="_blank" style="position: relative;left:10px;"><img src="{{ url_for('static',filename='css/002-instagram.png')}}" style="position: relative;left:30px;" class="ins"/></a>
+        </div>
+        <div id="name" style="position: relative;left:75%;top:20%;" ><div style="text-align: center;">ABHILASH SRIVASTAVA</div></div>
+        
+        <div class="info" style="position: relative;left:1%;top:30px">
+            <ul id="sk">
+                <li>B.TECH  GRADUATE</li>
+                <LI>VIT UNIVERSITY,VELLORE</LI>
+                <LI>ELECTRICAL AND ELECTRONICS, 2019 BATCH</LI>
+            </ul>
+        </div>
+        <div id="skills" style="position: relative;left:1%;top:20px;">
+            <p id="ski" style="position: relative;left:70px;top:28px;">SKILLS</p>
+                <p class="blockSk" style="position: relative;left:30px;top:5px;"></p>
+                    <div class="bar"><span></span></div>
+                <p class="blockSk" style="position: relative;left:30px;top:5px;"></p>
+                    <div class="bar"><span></span></div>
+                <p class="blockSk" style="position: relative;left:30px;top:5px;"></p>
+                    <div class="bar"><span></span></div>
+                <p class="blockSk" style="position: relative;left:30px;top:5px;"></p>
+                    <div class="bar"><span></span></div>    
+                    <!--<li>java</li>
+                <li>sql</li>
+                <li>python</li>-->
+        </div>
+        <div id="about" style="position: relative;top:-550px;left:380px;">
+            <h1 id="aboutH" style="position: relative;left:10px;">About Me</h1>
+            <p style="position: relative;left:15px;" id="texthov">
+                hey,hi what's up, this is abhilash Srivastava, i m an engineer currently employed
+                by enquero global, i have graduated in Electrical and Electronics from VIT 
+                university,vellore.
+                I am a football fanatic and like to code a lot.Talking about football I'm a barca fan, blaugrana by heart.
+                I'm a metalhead. I listen more of metal core and thrash metal.
+            </p>
+        </div>
+        <div style="position: relative;top:-500px;left:820px;" id="resume"><a href="https://drive.google.com/file/d/1nLG6gJN376TgjqnOVAKk0pDTGH3fuQyL/view?usp=sharing" target="_blank"><input type="button" value="Resume" id="resumebutton"></input></a></div>
+        <script src="{{ url_for('static',filename='javascript/portF.js')}}">
+        </script>
+        <script src="{{ url_for('static',filename='javascript/gitApiCall.js')}}"></script>
+        <div style="position: relative;left:30%; top:-560px;" class="gitRepo" onclick="clickAction()">
+            <!--<input type="button" value="click to get git repos"></input>-->
+            <button type="button" style="position: relative;left:1px" id="gitbut"><img src="{{url_for('static',filename='css/Octocat.png')}}" style="position: relative;left:10px;" id="octocat"/></a>
+            <div id="button"></div>
+        </div>
+        
+    </body>
+</html>

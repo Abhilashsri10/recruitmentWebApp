@@ -31,10 +31,10 @@
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
-              <a class="nav-item nav-link" href="{{ url_for('Login') }}">Login</a>
-              <a class="nav-item nav-link" href="{{ url_for('registration') }}">Register</a>
-              <a class="nav-item nav-link" href="{{ url_for('AdLogin') }}">Admin Login</a>
-              <a class="nav-item nav-link" href="{{ url_for('dashboard') }}">account</a>
+              <!--<a class="nav-item nav-link" href="{{ url_for('search') }}">search</a>
+              <a class="nav-item nav-link" href="{{ url_for('info') }}">candidates Profile</a>
+              <a class="nav-item nav-link" href="{{ url_for('statEnt') }}">status</a>-->
+              <a class="nav-item nav-link" href="{{ url_for('logoutadmin') }}">Logout</a>
             </div>
           </div>
         </div>
@@ -56,13 +56,12 @@
         </div>
         <div class="col-md-4">
           <div class="content-section">
-            <h3>Our Sidebar</h3>
-            <p class='text-muted'>You can put any information here you'd like.
+            <h3>Other Options</h3>
+            <p class='text-muted'>
               <ul class="list-group">
-                <li class="list-group-item list-group-item-light">Latest Posts</li>
-                <li class="list-group-item list-group-item-light">Announcements</li>
-                <li class="list-group-item list-group-item-light">Calendars</li>
-                <li class="list-group-item list-group-item-light">etc</li>
+                <li class="list-group-item list-group-item-light"><a href="{{ url_for('search') }}"><b>Search</b></a></li>
+                <li class="list-group-item list-group-item-light"><a href="{{ url_for('info') }}"><b>candid profile</b></a></li>
+                <li class="list-group-item list-group-item-light"><a href="{{ url_for('statEnt') }}"><b>Status Update</b></a></li>
               </ul>
             </p>
           </div>
