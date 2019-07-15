@@ -11,7 +11,7 @@ Created on Fri Jul  5 11:03:59 2019
 
 @author: AbhilashSrivastava
 """
-from flask import Flask,render_template,url_for,request,flash,redirect,session,logging,Response
+from flask import jsonify,Flask,render_template,url_for,request,flash,redirect,session,logging,Response
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session,sessionmaker
 from passlib.hash import sha256_crypt
@@ -24,6 +24,8 @@ import urllib.request
 import profile
 from flask_login import LoginManager,login_user,current_user,logout_user,login_required
 import sys,json
+from google_drive_downloader import GoogleDriveDownloader as gdd
+from realApp import download
 
 app=Flask(__name__)
 
@@ -88,6 +90,7 @@ def Login():
         password=request.form.get("password")
         emaildata=db.execute("SELECT email FROM candid WHERE email=:email",{"email":email}).fetchone()
         passworddata=db.execute("SELECT password FROM candid WHERE email=:email",{"email":email}).fetchone()[0]
+        imagedata=db.execute("SELECT image FROM candid WHERE email=:email",{"email":email}).fetchone()[0]
         if emaildata is None:
             flash("No email","danger")
             return render_template("login.html",form=form)
@@ -162,21 +165,32 @@ def prof():
         flash("logged",'success')
         userDetails=db.execute("SELECT * from candid where email=:email;",{"email":session['id']}).fetchone()
         statDetails=db.execute("SELECT * from candidStat where id=:id;",{"id":userDetails[0]}).fetchone()
+        #file_name=profile.randomString(4)
+        file_name='messi'
+        #download(userDetails[4],file_name)
         if(statDetails==None):
             statDetails=['NULL','NULL','NULL','NULL','NULL','NULL','NULL','NULL']
-            return render_template('profilePage.html',userDetails=userDetails,statDetails=statDetails)
-        return render_template('profilePage.html',userDetails=userDetails,statDetails=statDetails)
+            return render_template('profilePage.html',userDetails=userDetails,statDetails=statDetails,file_name=file_name)
+        return render_template('profilePage.html',userDetails=userDetails,statDetails=statDetails,file_name=file_name)
 
 @app.route('/adprof',methods=['GET','POST'])
 def adprof():
     if 'loggedin' in session:
-        data=request.get_json()
-        flash(data)
-        userDetails=db.execute("SELECT * from candid where id=:id;",{"id":data[0]['id']}).fetchone()
-        flash(userDetails)
-        statDetails=db.execute("SELECT * from candidStat where id=:id;",{"id":userDetails[0]}).fetchone()
+        rf=request.form
+        #flash(rf,'danger')
+        #flash(rf.keys())
+        userDetails=db.execute("SELECT * from candid where id=:id;",{"id":11}).fetchone()
+        statDetails=db.execute("SELECT * from candidStat where id=:id;",{"id":11}).fetchone()
+        for key in rf.keys():
+            data=key
+            flash(data)
+            data_dic=json.loads(data)
+            flash(data_dic['val'])
+            userDetails=db.execute("SELECT * from candid where id=:id;",{"id":data_dic['val']}).fetchone()
+            flash(userDetails)
+            statDetails=db.execute("SELECT * from candidStat where id=:id;",{"id":userDetails[0]}).fetchone()
+            return render_template('profilePage.html',userDetails=userDetails,statDetails=statDetails)
         return render_template('profilePage.html',userDetails=userDetails,statDetails=statDetails)
-
 
            
 @app.route('/stat',methods=['GET','POST'])
@@ -208,14 +222,35 @@ def search():
     result = None
     if form.validate_on_submit():
         #curs = db.connection.cursor()
-        choice = form.s.data
-        skills = request.form.get('skills')
-        jobId=request.form.get('jobId')
+        #notice = request.form.get('s')
+        skills = request.form.get('e')
+        jobId=request.form.get('jobid')
         rounds=request.form.get('rounds')
         stages=request.form.get('stages')
-        result=db.execute(f"SELECT c.id,c.name,s.{rounds},c.skills FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.skills={skills} AND s.{rounds}={stages};")
-        flash(result.fetchone())
-        return redirect(url_for('adminHome'))
+        if(skills!=None and jobId=="NULL" and stages=="NULL" and rounds=="NULL"):
+            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE s.skills=:skills;",{"skills":skills})
+            details=result.fetchall()
+            return render_template('dashboard.html',details=details)
+        elif(skills!=None and jobId=="NULL" and stages!="NULL" and rounds!="NULL"):
+            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.skills=:skills AND s.{rounds}=:stages;",{"skills":skills,"stages":stages})
+            details=result.fetchall()
+            return render_template('dashboard.html',details=details)
+        elif(skills!=None and jobId!="NULL" and stages=="NULL" and rounds=="NULL"):
+            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.skills=:skills AND c.jobId={jobId};",{"skills":skills})
+            details=result.fetchall()
+            return render_template('dashboard.html',details=details)
+        elif(skills!=None and jobId!="NULL" and stages!="NULL" and rounds!="NULL"):
+            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.skills=:skills AND s.{rounds}=:stages AND c.jobId={jobId};",{"skills":skills,"stages":stages})
+            details=result.fetchall()
+            return render_template('dashboard.html',details=details)
+        elif(skills==None and jobId!="NULL" and stages=="NULL" and rounds=="NULL"):
+            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.jobId={jobId};")
+            details=result.fetchall()
+            return render_template('dashboard.html',details=details)
+        elif(skills==None and jobId!="NULL" and stages!="NULL" and rounds!="NULL"):
+            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE s.{rounds}=:stages AND c.jobId={jobId};",{"stages":stages})
+            details=result.fetchall()
+            return render_template('dashboard.html',details=details)
     return render_template('searchBar.html', form=form, result=result)
 
     
