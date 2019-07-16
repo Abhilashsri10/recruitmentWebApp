@@ -90,7 +90,7 @@ def Login():
         password=request.form.get("password")
         emaildata=db.execute("SELECT email FROM candid WHERE email=:email",{"email":email}).fetchone()
         passworddata=db.execute("SELECT password FROM candid WHERE email=:email",{"email":email}).fetchone()[0]
-        imagedata=db.execute("SELECT image FROM candid WHERE email=:email",{"email":email}).fetchone()[0]
+        #imagedata=db.execute("SELECT image FROM candid WHERE email=:email",{"email":email}).fetchone()[0]
         if emaildata is None:
             flash("No email","danger")
             return render_template("login.html",form=form)
@@ -155,7 +155,7 @@ def logoutcandid():
 def logoutadmin():
     if 'loggedin' in session:
         session.pop('admin',None)
-        flash("You have been logged out!")
+        flash("You have been logged out!",'success')
     #gc.collect()
     return redirect(url_for('AdLogin'))
 @app.route('/prof')
@@ -206,13 +206,18 @@ def statEnt():
         if(result1==0 and result2==1):
             db.execute(f"INSERT INTO candidStat(id,{rd}) VALUES(:id,:rounds);",
                                            {"id":int(idc),"rounds":st})    
+            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.id={int(idc)};")
+            details=result.fetchall()
             db.commit()
             flash(f'Entry done!','success')
+            return render_template('dashboard.html',details=details)
         elif(result2==1 and result1!=0):
             db.execute(f"UPDATE candidStat SET {rd}=:st WHERE id={int(idc)};",{"st":st})
+            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.id={int(idc)};")
+            details=result.fetchall()
             db.commit()
-            flash(f'Entry done!','success')
-        return redirect(url_for('adminHome'))
+            flash(f'Update done!','success')
+            return render_template('dashboard.html',details=details)
     return render_template('statent.html',form=form)
 
 #filters
@@ -228,19 +233,19 @@ def search():
         rounds=request.form.get('rounds')
         stages=request.form.get('stages')
         if(skills!=None and jobId=="NULL" and stages=="NULL" and rounds=="NULL"):
-            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE s.skills=:skills;",{"skills":skills})
+            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE s.skills like :skills;",{"skills":'%'+skills+'%'})
             details=result.fetchall()
             return render_template('dashboard.html',details=details)
         elif(skills!=None and jobId=="NULL" and stages!="NULL" and rounds!="NULL"):
-            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.skills=:skills AND s.{rounds}=:stages;",{"skills":skills,"stages":stages})
+            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.skills like :skills AND s.{rounds}=:stages;",{"skills":'%'+skills+'%',"stages":stages})
             details=result.fetchall()
             return render_template('dashboard.html',details=details)
         elif(skills!=None and jobId!="NULL" and stages=="NULL" and rounds=="NULL"):
-            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.skills=:skills AND c.jobId={jobId};",{"skills":skills})
+            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.skills like :skills AND c.jobId={jobId};",{"skills":'%'+skills+'%'})
             details=result.fetchall()
             return render_template('dashboard.html',details=details)
         elif(skills!=None and jobId!="NULL" and stages!="NULL" and rounds!="NULL"):
-            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.skills=:skills AND s.{rounds}=:stages AND c.jobId={jobId};",{"skills":skills,"stages":stages})
+            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.skills like :skills AND s.{rounds}=:stages AND c.jobId={jobId};",{"skills":'%'+skills+'%',"stages":stages})
             details=result.fetchall()
             return render_template('dashboard.html',details=details)
         elif(skills==None and jobId!="NULL" and stages=="NULL" and rounds=="NULL"):
