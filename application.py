@@ -116,6 +116,13 @@ def Login():
                 session['logged_in']=True
                 session['id']=request.form['email']
                 flash("You are now logged in",'success')
+                canId=db.execute("SELECT id FROM candid WHERE email=:email;",{"email":email}).fetchone()[0]
+                result1=db.execute(f"SELECT COUNT(id) FROM candidStat WHERE id={canId};").fetchone()[0]
+                
+                result2=db.execute(f"SELECT COUNT(id) FROM candid WHERE id={canId};").fetchone()[0]
+                if(result1==0 and result2==1):
+                    db.execute(f"INSERT INTO candidStat(id,r1) VALUES({canId},'None');")
+                    db.commit()
                 #flash(db.execute("Select * from candid WHERE email=:email",{"email":session['username']}).fetchone()[1])
                 return redirect(url_for("prof"))
             else:
@@ -170,10 +177,10 @@ def info():
     resultValue=db.execute("select * from candid;")
     userDetails=resultValue.fetchall()
     db.commit()
-    if(userDetails[0][7].endswith('/view?usp=sharing')):
-        userR=userDetails[0][7][:-17]+'?export=download'
+    if(userDetails[0][6].endswith('/view?usp=sharing')):
+        userR=userDetails[0][6][:-17]+'?export=download'
         return render_template('users.html',userDetails=userDetails,userR=userR)
-    return render_template('users.html',userDetails=userDetails)
+    #return render_template('users.html',userDetails=userDetails,userR=userR)
     #return redirect(url_for('adminHome'))
 #logins
 @app.route("/logoutcandid")
@@ -211,37 +218,38 @@ def prof():
 #profile list and resume download
 @app.route('/adprof',methods=['POST'])
 def adprof():
-    form=StatusForm()
     if 'loggedin' in session:
         rf=request.get_json(silent=True)
+        flash(rf['val'])
         userDetails=db.execute("SELECT * from candid where id=:id;",{"id":rf['val']}).fetchone()
-        statDetails=db.execute("SELECT * from candidStat where id=:id;",{"id":userDetails[0]}).fetchone()
+        statDetails=db.execute("SELECT * from candidStat where id=:id;",{"id":rf['val']}).fetchone()
         
-        return render_template('profilePageadm.html',userDetails=userDetails,statDetails=statDetails,form=form)
+        #return render_template('mainDashboard.html')
+        return render_template('profilePageadm.html',userDetails=userDetails,statDetails=statDetails)
     #return render_template('profilePage.html',userDetails=userDetails,statDetails=statDetails)
 
            
-@app.route('/stat',methods=['GET','POST'])
-def statEnt():
+@app.route('/stat/<canId>',methods=['GET','POST'])
+def statEnt(canId):
     form=StatusForm()
     if request.method=='POST':
-        idc=request.form.get("Id")
+        #idc=request.form.get("Id")
         rd=request.form.get("rounds")
         st=request.form.get("stat")
-        result1=db.execute("SELECT COUNT(id) FROM candidStat WHERE id=:id;",{"id":idc}).fetchone()[0]
-        result2=db.execute("SELECT COUNT(id) FROM candid WHERE id=:id;",{"id":idc}).fetchone()[0]
-        
+        result1=db.execute("SELECT COUNT(id) FROM candidStat WHERE id=:id;",{"id":canId}).fetchone()[0]
+        result2=db.execute("SELECT COUNT(id) FROM candid WHERE id=:id;",{"id":canId}).fetchone()[0]
+            
         if(result1==0 and result2==1):
             db.execute(f"INSERT INTO candidStat(id,{rd}) VALUES(:id,:rounds);",
-                                           {"id":int(idc),"rounds":st})    
-            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.id={int(idc)};")
+                                               {"id":int(canId),"rounds":st})    
+            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.id={int(canId)};")
             details=result.fetchall()
             db.commit()
             flash(f'Entry done!','success')
             return render_template('dashboard.html',details=details)
         elif(result2==1 and result1!=0):
-            db.execute(f"UPDATE candidStat SET {rd}=:st WHERE id={int(idc)};",{"st":st})
-            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.id={int(idc)};")
+            db.execute(f"UPDATE candidStat SET {rd}=:st WHERE id={int(canId)};",{"st":st})
+            result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.id={int(canId)};")
             details=result.fetchall()
             db.commit()
             flash(f'Update done!','success')
