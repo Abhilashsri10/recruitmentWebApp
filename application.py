@@ -64,7 +64,12 @@ def adminHome():
     graphdata1=[]
     for ele in fetchData1:
         graphdata1.append(['('+str(ele[0])+')'+ele[1],ele[2]])
-    return render_template('mainDashboard.html', title='adminHome',graphdata=graphdata,graphdata1=graphdata1)
+        
+    graphdata2=[]
+    fetchData2=db.execute("SELECT source,count(source) FROM candid GROUP BY source;").fetchall()
+    for ele in fetchData2:
+        graphdata2.append([ele[0],ele[1]])
+    return render_template('mainDashboard.html', title='adminHome',graphdata=graphdata,graphdata1=graphdata1,graphdata2=graphdata2)
 
 
 #Registration Page
@@ -153,6 +158,12 @@ def AdLogin():
         graphdata1=[]
         for ele in fetchData1:
             graphdata1.append(['('+str(ele[0])+')'+ele[1],ele[2]])
+        #for source
+        graphdata2=[]
+        fetchData2=db.execute("SELECT source,count(source) FROM candid GROUP BY source;").fetchall()
+        for ele in fetchData2:
+            graphdata2.append([ele[0],ele[1]])
+            
         if adIddata is None:
             flash("No adminId","danger")
             return render_template("adminlogin.html",form=form)
@@ -161,7 +172,7 @@ def AdLogin():
                 session['loggedin']=True
                 session['admin']=request.form['adminId']
                 flash("You are now logged in",'success')
-                return render_template("mainDashboard.html",graphdata=json.dumps(graphdata),graphdata1=json.dumps(graphdata1))
+                return render_template("mainDashboard.html",graphdata=json.dumps(graphdata),graphdata1=json.dumps(graphdata1),graphdata2=json.dumps(graphdata2))
             else:
                 flash("incorrect password","danger")
                 return render_template("adminlogin.html",form=form)
@@ -220,7 +231,7 @@ def prof():
 def adprof():
     if 'loggedin' in session:
         rf=request.get_json(silent=True)
-        flash(rf['val'])
+        
         userDetails=db.execute("SELECT * from candid where id=:id;",{"id":rf['val']}).fetchone()
         statDetails=db.execute("SELECT * from candidStat where id=:id;",{"id":rf['val']}).fetchone()
         
@@ -271,6 +282,7 @@ def jobVac():
             flash("Entry Done!",'success')
         else:
             db.execute("UPDATE jobVac SET noOfVac=:no WHERE jobId=:jobId;",{"no":no,"jobId":jobId})
+            db.commit()
             flash("updated",'success')
         #userDetails=db.execute("SELECT * from candid where id=:id;",{"id":id}).fetchone()
         #statDetails=db.execute("SELECT * from candidStat where id=:id;",{"id":userDetails[0]}).fetchone()
@@ -334,9 +346,9 @@ def graphFiltersav():
     result1=db.execute(f"SELECT noOfVac FROM jobVac WHERE jobId={int(dataId)};")
     
     #result=db.execute(f"SELECT c.id,c.name,c.email,c.phno,s.r1,s.r2,s.r3,s.r4,s.hr,s.os,s.joined FROM candid as c RIGHT JOIN candidStat as s ON c.id=s.id WHERE c.jobId={int(dataId)};")
-    details=result1.fetchall()
+    #details=result1.fetchall()
     db.commit()
-    return render_template('jobProf.html',details=details)
+    return render_template('jobProf.html',dataId=dataId)
         
     
     
