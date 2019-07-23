@@ -1,0 +1,53 @@
+{% extends "layoutadm.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Job Entry Portal</legend>
+                        <div class="form-group" style="position: relative;left:20px;">
+                            {{ form.jobId.label(class="form-control-label") }}
+                            {% if form.jobId.errors %}
+                                    {{ form.jobId(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback" >
+                                        {% for errors in form.jobId.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.jobId(class="form-control-lg") }}
+                                {% endif %}
+                        </div>
+                        <div class="form-group" style="position: relative;left:35px;">
+                                {{ form.job.label(class="form-control-label") }}
+                                {% if form.job.errors %}
+                                        {{ form.job(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback" >
+                                            {% for errors in form.job.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.job(class="form-control-lg") }}
+                                    {% endif %}
+                        </div>
+                        <div class="form-group" style="position: relative;left:1px;">
+                                {{ form.no.label(class="form-control-label") }}
+                                {% if form.no.errors %}
+                                        {{ form.no(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback" >
+                                            {% for errors in form.no.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.no(class="form-control-lg") }}
+                                    {% endif %}
+                        </div>
+                </fieldset>
+                <div class="form-group">
+                        {{ form.submit(class="btn btn-outline-info") }}
+                </div>
+        </form>
+    </div>
+{% endblock content %}

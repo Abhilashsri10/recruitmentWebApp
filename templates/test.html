@@ -4,11 +4,18 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <button id="1" name="1" value="abhi">Button1</button>
 <button id="2" name="2" value="2">Button2</button>
+<div id="entry"></div>
 <script>
-    $("button").click(function() {
-    var fired_button = $(this).val();
-    alert(fired_button);
-});
+    var butt=document.getElementById("2"),count=1;
+    butt.onclick=function(){
+    if(count%2!=0){    
+    document.getElementById("entry").innerHTML='<p>Hello idiots</p>';
+    }
+    else{
+        document.getElementById("entry").innerHTML=null;
+    }
+    count+=1;
+}
 </script>
 </body>
 </html>

@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/recruit.css') }}">
+    
+    
+
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" ></script>
 
     {% if title %}
         <title>RecruitmentApp - {{ title }}</title>
@@ -18,7 +24,7 @@
 </head>
 <body>
     <header class="site-header">
-      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top" style="background: deepskyblue;">
         <div class="container">
           <a class="navbar-brand mr-4" href="/">Recruitment App</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,15 +32,14 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
-              <a class="nav-item nav-link" href="{{ url_for('info') }}">About</a>
+              <a class="nav-item nav-link" href="{{ url_for('adminHome') }}">Home</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
-              <!--<a class="nav-item nav-link" href="{{ url_for('search') }}">search</a>
-              <a class="nav-item nav-link" href="{{ url_for('info') }}">candidates Profile</a>
-              <a class="nav-item nav-link" href="{{ url_for('statEnt') }}">status</a>-->
+              
+              
               <a class="nav-item nav-link" href="{{ url_for('logoutadmin') }}">Logout</a>
+              
             </div>
           </div>
         </div>
@@ -54,14 +59,14 @@
           {% endwith %}
           {% block content %}{% endblock %}
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4" style="position: relative;right:-5%">
           <div class="content-section">
             <h3>Other Options</h3>
             <p class='text-muted'>
               <ul class="list-group">
                 <li class="list-group-item list-group-item-light"><a href="{{ url_for('search') }}"><b>Search</b></a></li>
                 <li class="list-group-item list-group-item-light"><a href="{{ url_for('info') }}"><b>candid profile</b></a></li>
-                <li class="list-group-item list-group-item-light"><a href="{{ url_for('statEnt') }}"><b>Status Update</b></a></li>
+                <li class="list-group-item list-group-item-light"><a href="{{ url_for('jobVac') }}"><b>Job VACANCY</b></a></li>
               </ul>
             </p>
           </div>

@@ -26,14 +26,16 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
-              
+              <a class="nav-item nav-link" href="{{ url_for('adminHome') }}">Home</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
-              <a class="nav-item nav-link" href="{{ url_for('Login') }}">Login</a>
-              <a class="nav-item nav-link" href="{{ url_for('registration') }}">Register</a>
-              <a class="nav-item nav-link" href="{{ url_for('AdLogin') }}">Admin Login</a>
+              
+              <a class="nav-item nav-link" href="{{ url_for('search') }}"><b>Search</b></a>
+              <a class="nav-item nav-link" href="{{ url_for('info') }}"><b>candid profile</b></a>
+              
+              <a class="nav-item nav-link" href="{{ url_for('logoutadmin') }}">Logout</a>
+              
             </div>
           </div>
         </div>
@@ -54,7 +56,6 @@
           {% block content %}{% endblock %}
         </div>
         
-        </div>
       </div>
     </main>
 

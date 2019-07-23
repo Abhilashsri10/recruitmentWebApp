@@ -3,6 +3,8 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
 <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/profP.css')}}">
+<script src="bootstrap-notify.js"></script>
+<script src="bootstrap-notify.min.js"></script>
 <div class="container emp-profile">
             <form method="post">
                 <div class="row">
@@ -24,6 +26,8 @@
                         </div>
                     </div>
                     <div class="col-md-2">
+                        <a href="{{ url_for('adminHome') }}"><button type="button" id="home">Home</button></a>
+                        <a href="{{ url_for('statEnt',canId=userDetails[0])}}"><button type="button" id="stata">Status Update</button></a>
                         <a href="{{ url_for('logoutcandid') }}"><button type="button">Logout</button></a>
                     </div>
                 </div>
@@ -38,7 +42,7 @@
                     <div class="col-md-3">
                             <div class="profile-work">
                                 <p style="position: relative;top:-120px"><b>Status</b></p>
-                                <table border =1 style="position: relative;left:20%;top:-400px">
+                                <table border =1 style="position: relative;left:20%;top:-420px">
                                         <tr style="text-align: center">
                                                 <th>round1</th>
                                                 <th>round2</th> 
@@ -107,56 +111,22 @@
                                                 </div>
                                         </div>
                             </div>
-                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Experience</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>Expert</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Hourly Rate</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>10$/hr</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Total Projects</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>230</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>English Level</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>Expert</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Availability</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>6 months</p>
-                                            </div>
-                                        </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label>Your Bio</label><br/>
-                                        <p>Your detail description</p>
-                                    </div>
-                                </div>
-                            </div>
+                            
+                            
+                            
                         </div>
                     </div>
                 </div>
             </form>           
         </div>
+        <!--<script>
+            
+            $(document).ready(function(){
+                    $.notifyDefaults({
+                        type: 'success',
+                        allow_dismiss: false
+                    });
+                    $.notify('logged out!');
+                }
+            );
+        </script>-->

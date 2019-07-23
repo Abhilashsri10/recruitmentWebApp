@@ -1,0 +1,96 @@
+{% extends "layoutadm.html" %}
+{% block content %}
+<div id="piechart" style="position: relative;top:-5px;left:10px"></div>
+<div id="barchart" style="position: relative;top:-5px;left: 50px"></div>
+<div id="barchart1" style="position: relative;left: 50px"></div>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      google.charts.setOnLoadCallback(drawChart1);
+      google.charts.setOnLoadCallback(drawChart2);
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'jobId');
+        data.addColumn('number', 'Count');
+        data.addRows({{ graphdata| safe }});
+        var options = {
+            legend: 'none',
+            pieSliceText: 'label',
+            title: 'JOB Applied' ,
+            pieStartAngle: 100,
+            height:300,
+            //width:200,
+            backgroundColor:{fill:'transparent'}
+      };
+      var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+      function selectHandler() {
+          var selectedItem = chart.getSelection()[0];
+          if (selectedItem) {
+            var topping = data.getValue(selectedItem.row, 0);
+            dat={"val":topping};
+            axios.post('/graphFilters', dat)
+                .then(function (response) {
+                    document.write(response.data)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+          }
+        }
+        google.visualization.events.addListener(chart, 'select', selectHandler);
+        chart.draw(data, options);
+      }
+
+      function drawChart1() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'job');
+        data.addColumn('number', 'no');
+        data.addRows({{ graphdata1 | safe }});
+        var options = {
+            legend: 'none',
+            pieSliceText: 'label',
+            title: 'JOB Available' ,
+            pieStartAngle: 100,
+            height:300,
+            backgroundColor:{fill:'transparent'}
+      };
+      var chart = new google.visualization.BarChart(document.getElementById('barchart'));
+      function selectHandler() {
+          var selectedItem = chart.getSelection()[0];
+          if (selectedItem) {
+            var topping = data.getValue(selectedItem.row, 0);
+            dat={"val":topping};
+            axios.post('/graphFiltersav', dat)
+                .then(function (response) {
+                    document.write(response.data)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+          }
+        }
+        google.visualization.events.addListener(chart, 'select', selectHandler);
+        chart.draw(data, options);
+    }
+        function drawChart2() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'job');
+            data.addColumn('number', 'no');
+            data.addRows({{ graphdata2 | safe }});
+            var options = {
+                legend: 'none',
+                pieSliceText: 'label',
+                title: 'Sources' ,
+                pieStartAngle: 100,
+                height:300,
+                backgroundColor:{fill:'transparent'}
+        };
+        var chart = new google.visualization.BarChart(document.getElementById('barchart1'));
+            chart.draw(data, options);
+      }
+    </script>
+{% endblock content %}

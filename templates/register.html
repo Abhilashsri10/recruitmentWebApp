@@ -44,19 +44,7 @@
                                     {{ form.jobId(class="form-control-lg") }}
                                 {% endif %}
                         </div>
-                        <div class="form-group">
-                                {{ form.image.label(class="form-control-label") }}
-                                {% if form.image.errors %}
-                                    {{ form.image(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for errors in form.image.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.image(class="form-control-lg") }}
-                                {% endif %}
-                        </div>
+                        
                         <div class="form-group">
                                 {{ form.resume.label(class="form-control-label") }}
                                 {% if form.resume.errors %}

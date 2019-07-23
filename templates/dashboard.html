@@ -1,0 +1,34 @@
+{% extends "layoutdash.html" %}
+{% block content %}
+<table border =1 style="position: relative;left:-5%" class="table table-dark table-hover">
+        <tr style="text-align: center">
+                <th>Id</th>
+                <th>name</th>
+                <th>email</th>
+                <th>contact no.</th> 
+                <th>round1</th>
+                <th>round2</th>
+                <th>round3</th>
+                <th>round4</th>
+                <th>hr</th>
+                <th>offer status</th>
+                <th>joined</th>
+        </tr>
+    {% for ele in details %}
+    <tr>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <td>{{ ele[0] }}</td>
+        <td>{{ ele[1]}}</td>
+        <td>{{ ele[2]}}</td>
+        <td>{{ ele[3] }}</td>
+        <td>{{ ele[4] }}</td>
+        <td>{{ ele[5] }}</td>
+        <td>{{ ele[6] }}</td>
+        <td>{{ ele[7] }}</td>
+        <td>{{ ele[8] }}</td>
+        <td>{{ ele[9] }}</td>
+        <td>{{ ele[10] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}

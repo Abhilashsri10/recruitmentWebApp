@@ -6,31 +6,13 @@
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Filters</legend>
                 <div class="form-group">
-                    {{ form.s.label(class="form-control-label") }}
-                    {% if form.s.errors %}
-                        {{ form.s(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.s.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.s(class="form-control form-control-lg") }}
-                    {% endif %}
+                    {{ form.e.label(class="form-control-label") }}
+                    {{ form.e(class="form-control form-control-lg") }}
                 </div>
                 <div class="form-group">
-                    {{ form.e.label(class="form-control-label") }}
-                    {% if form.e.errors %}
-                        {{ form.e(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.e.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.e(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
+                        {{ form.jobid.label(class="form-control-label") }}
+                        {{ form.jobid(class="form-control form-control-lg") }}
+                    </div>
                 <div class="form-group">
                     {{ form.stages.label(class="form-control-label") }}
                     {{ form.stages(class="form-control form-control-lg") }}

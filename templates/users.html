@@ -1,33 +1,86 @@
 {% extends "layoutadm.html" %}
 {% block content %}
-<table border =1 style="position: relative;left:20%">
-        <tr style="text-align: center">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/footable.core.css">
+        <link rel="stylesheet" href="css/footable.metro.css">
+        <script src="js/jquery-1.11.3.min.js"></script>
+        <script src="js/footable.js"></script>
+        <script src="js/footable.paginate.js"></script>
+
+<table border =1 style="position: relative;left:10%" class="table table-dark table-hover footable" data-page-size="10" data-first-text="FIRST" data-next-text="NEXT" data-previous-text="PREVIOUS" data-last-text="LAST" id="myTable">
+    <thead>    
+    <tr style="text-align: center">
                 <th>candidId</th>
                 <th>name</th> 
                 <th>JobId</th>
                 <th>Resume</th>
         </tr>
+        </thead>
+        <tbody>
     {% for user in userDetails %}
     <tr>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-        <td><a href="{{ 'adprof' }}" ><button id="idp" name="idp" value="{{ user[0] }}">{{ user[0] }}</button></a></td>
+        <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>-->
+        <td><button id="idp" name="idp" value="{{ user[0] }}">{{ user[0] }}</button></td>
         <td>{{ user[1]}}</td>
         <td>{{ user[3]}}</td>
         <td><a href="{{ userR }}" target="_blank">Resume</a></td>
+        
     </tr>
     {% endfor %}
+</tbody>
+<tfoot class="hide-if-no-paging">
+        <td colspan="5">
+            <div class="pagination"></div>
+        </td>
+        </tfoot>
+    <!--<script
+			  src="https://code.jquery.com/jquery-3.2.1.js"
+			  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+			  crossorigin="anonymous">
+	</script>-->
     <script type="text/javascript">
-        var data;
-            $("button").click(function() {
-            var fired_button = $(this).val();
-            //alert(fired_button);
-            data=[{"id":fired_button}];
-            doWork();
-            });
-            function doWork(){
-                $.post("receiver",data,function(){});
-            event.preventDefault();
-            }
+        var server = "http://127.0.0.1:2010";
+        
+        var dat;
+        var appdir='/adprof';
+        var responseData;        
+        /*
+           
+                var appdir='/adprof';
+                var fired_button = $(this).val();
+                alert(fired_button)
+                dat={"val":fired_button};
+                $.ajax({
+  						type: "POST",
+  						url:server+appdir,
+  						data: JSON.parse(Stringify),
+  						dataType: 'json'
+                    })
+                    */
+                $("button").click(function() {
+                    var fired_button = $(this).val();
+                    dat={"val":fired_button};
+                axios.post('/adprof', dat)
+                .then(function (response) {
+                    document.write(response.data)
+                    console.log(response.data)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            })
+            
+            //$('#myTable').append(html).trigger('footable_redraw');
+            $(document).ready(function(){
+           
+           $('.footable').footable();
+           
+       });
+
     </script>
 </table>
 {% endblock content %}
